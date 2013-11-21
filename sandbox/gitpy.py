@@ -39,5 +39,4 @@ for commit in commits:
     #print 'Authored Tree: ', commit.authored_tree
     count += 1
 
-
 print 'Number of commits in the master: ', count
