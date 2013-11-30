@@ -1,10 +1,70 @@
 {% extends "layout.html" %}
 
+{% block js %}
+<script type="text/javascript">
+$(function () {
+        $('#commitvol').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Monthly Average Rainfall'
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com'
+            },
+            xAxis: {
+                categories: [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec'
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Rainfall (mm)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Tokyo',
+                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+    
+            }]
+        });
+    });
+</script>
+
+{% endblock %}
+
 {% block body %}
     <div class="row">
       <div class="large-12 columns">
         <p>repository: <code>requests</code></p>
-        <p>branches: <code>master</code></p>
+        <p>branches: <code>master</code> / <code>dev</code> </p>
         <p>latest commit: <code>av48992kfvalf</code> by <a href="#">A U Thor</a></p>
 
       </div>
@@ -41,10 +101,57 @@
               <th>{{i}}</th>
               {% endfor %}
             </tr>
+            {% for j in range(24) %}
+            <tr>
+              <th>{{j}}</th>
+              {% for k in range(31) %}
+              <th>.</th>
+              {% endfor %}
+            </tr>
+            {% endfor %}
           </table>
         </div>
       </div>
 
+    </div><!-- row -->
+
+    <div class="row">
+      <div class="large-6 columns">
+        <h4>Commits by volume</h4>
+        <div id="commitvol" style="min-width: 110px; height: 200px; margin: 0 auto"></div>
+
+      </div>
+      <div class="large-6 columns">
+        <h4>Net commits</h4>
+        <p>insert histogram here</p>
+      </div>
+    </div><!-- row -->
+
+    <div class="row">
+      <p>Ratio of Commits to Comments:</p>
+      <ul>
+        <li>Rep avg: <code>10/11</code></li>
+        <li>Last 10 commits: <code>10/15</code></li>
+      </ul>
+
+      <div class="large-6 columns">
+        <h4>histogram (detailed committers)</h4>
+        </div>
+        <h4>histogram (poor committers)</h4>
+        </div>
+    </div><!-- row -->
+
+    <div class="row">
+      <p>Multi language dev environments: </p>
+      <ul>
+        <li><code>10</code> Programming languages</li>
+        <li><code>4</code> Assets(images, CSS)</li>
+      </ul>
+
+      <div class="large-6 columns">
+        <h4>histogram (Langauge files distribution)</h4>
+        </div>
+        
     </div><!-- row -->
 
 
@@ -68,5 +175,4 @@
         </div>
       </div><!-- large-4 -->
     </div>
-
 {% endblock %}
