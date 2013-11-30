@@ -31,7 +31,7 @@ for commit in commits:
           'committer': unicode(commit.committer),
           'committed_date': commit.committed_date,
           'message': unicode(commit.message)
-      }
+      } 
     graph_db.create(nc)
 
     #for parent in commit.parents:
