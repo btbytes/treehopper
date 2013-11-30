@@ -25,10 +25,7 @@ count = 0
 
 for commit in commits:
     nc = {'hexsha': commit.hexsha,
-          'committer':unicode(commit.committer),
           'message': unicode(strip(commit.message)),
-          'author': unicode(commit.author),
-          'committer': unicode(commit.committer),
           'committed_date': commit.committed_date,
           'message': unicode(commit.message)
       } 
