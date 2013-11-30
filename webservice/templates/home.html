@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="row">
+      <div class="large-12 columns">
+        <p>repository: <code>requests</code></p>
+        <p>branches: <code>master</code></p>
+        <p>latest commit: <code>av48992kfvalf</code> by <a href="#">A U Thor</a></p>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-6 columns">
+        <div class="panel">
+          <h4>Commit History</h4>
+          <ul>
+            <li>12adfsdf</li>
+            <li>12adfsdf</li>
+            <li>12adfsdf</li>
+            <li>12adfsdf</li>
+          </ul>
+        </div>
+      </div>
+      <div class="large-6 columns">
+        <div class="panel">
+          <h4>Commits by Volume</h4>
+          <p>
+        </div>
+      </div>
+
+    </div><!--row-->
+
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="panel">
+          <h4>Time Map</h4>
+          <table>
+            <tr>
+              {% for i in range(31) %}
+              <th>{{i}}</th>
+              {% endfor %}
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- row -->
+
+
+    <div class="row">
+      <div class="large-4 columns">
+        <div class="panel">
+          <h3>Who has worked longest?</h3>
+          <p>lorem ipsum</p>
+        </div>
+      </div><!-- large-4 -->
+
+      <div class="large-4 columns">
+        <div class="panel">
+          <h3>Who has widest skillset?</h3>
+        </div>
+      </div><!-- large-4 -->
+
+      <div class="large-4 columns">
+        <div class="panel">
+          <h3>What is the bus factor?</h3>
+        </div>
+      </div><!-- large-4 -->
+    </div>
+
+{% endblock %}

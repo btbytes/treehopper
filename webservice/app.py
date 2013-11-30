@@ -8,7 +8,12 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return render_template("layout.html", title="Home")
+    return render_template("home.html", title="Home")
+
+
+@app.route("/user/")
+def user_page():
+    return render_template("user.html", title="User")
 
 
 @app.route("/repo/register")
