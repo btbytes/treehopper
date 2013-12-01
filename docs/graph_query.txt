@@ -1,0 +1,29 @@
+Repo names:
+MATCH (n:Repository) RETURN n.r_name
+
+Last 10 commits :
+MATCH (n:Commits) RETURN n.hdx ORDER BY n.commit_date DESC LIMIT 10
+
+Total number of commits made by each developer, sorted on increasing order.
+MATCH (n:Developer)-[:commits]-(Commits)  RETURN  n.name,count(*) ORDER BY count(*)
+
+Creater of the files:
+MATCH (n:Developer)-[:creates]-(Commits)-[:modifies]-(File)  RETURN  n.name,File.filename
+
+Bus Factor:
+MATCH (n:Developer) return count(*)
+
+Length of the commit messages in increasing order:
+MATCH (n:Developer)-[:commits]-(Commits)  RETURN  (n.name),(sum(length(Commits.message))) ORDER BY sum(length(Commits.message))
+
+Avarage message length:
+MATCH (n:Developer)-[:commits]-(Commits)  RETURN  (avg(length(Commits.message))) 
+
+Last committed person and commit id
+MATCH (n:Developer)-[:creates|:commits]-(Commits) WHERE ALL(x IN nodes(Commits) WHERE x>Commits.commit_date) RETURN n.name,Commits.hdx
+
+Total number of n:Developer who create commits/files
+MATCH (n:Developer)-[:creates]-(a)  RETURN  count(DISTINCT n.name)
+
+MATCH (n:Developer)-[:creates]-(a)-[:modifies]-file  RETURN n.name,file.filename ORDER BY n.name
+
