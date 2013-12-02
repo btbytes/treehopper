@@ -16,16 +16,6 @@ def user_page():
     return render_template("user.html", title="User")
 
 
-@app.route("/repo/register")
-def repo_register():
-    pass
-
-
-@app.route("/repo/commit")
-def repo_commit():
-    pass
-
-
 if __name__ == "__main__":
     app.debug = True
     app.run()
