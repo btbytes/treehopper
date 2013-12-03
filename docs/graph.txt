@@ -1,0 +1,159 @@
+MATCH (n)-[r]-() DELETE n,r
+CREATE (n:Repository {r_name:"requests"})
+
+CREATE (d1:Developer {name: "Mehmet", email:"mk@com"}),
+        (d2:Developer {name: "Mike", email:"mi@com"}),
+        (d3:Developer {name: "Tom", email:"to@com"}),
+        (d4:Developer {name: "Saied", email:"sa@com"}),
+	(d5:Developer {name: "Lara", email:"la@com"}),
+ 	(d6:Developer {name: "Pradeep", email:"pd@com"}),
+
+	(f1:File {filename:"a.py"}),
+	(f2:File {filename:"b.c"}),
+	(f3:File {filename:"c.py"}),
+	(f4:File {filename:"d.c"}),
+
+	(c1:Commits {hdx:"1",message:"hello",commit_date:"2013"}),
+	(c2:Commits {hdx:"2",message:"hello",commit_date:"2012"}),
+	(c3:Commits {hdx:"3",message:"hello",commit_date:"2015"}),
+	(c4:Commits {hdx:"4",message:"hello",commit_date:"2015"}),
+	(c5:Commits {hdx:"5",message:"hello",commit_date:"2019"}),
+	(c6:Commits {hdx:"6",message:"hello",commit_date:"2011"}),
+	(c7:Commits {hdx:"7",message:"hello",commit_date:"202"}),
+	(c8:Commits {hdx:"8",message:"hello",commit_date:"2001"}),
+	(c9:Commits {hdx:"9",message:"hello",commit_date:"2007"}),
+	(c10:Commits {hdx:"10",message:"hello",commit_date:"2008"}),
+	(c11:Commits {hdx:"11",message:"hello",commit_date:"2013"}),
+	(c12:Commits {hdx:"12",message:"hello",commit_date:"2012"}),
+	(c13:Commits {hdx:"13",message:"hello",commit_date:"2011"})
+
+
+MATCH (r1:Repository),(c1:Commits)
+	WHERE r1.r_name = 'requests'
+	CREATE (c1)-[r:belongs_to]->(r1),
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'pd@com' AND b.hdx = '1'
+CREATE (a)-[r:commits]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'mk@com' AND b.hdx = '2'
+CREATE (a)-[r:commits]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'pd@com' AND b.hdx = '3'
+CREATE (a)-[r:commits]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'mi@com' AND b.hdx = '4'
+CREATE (a)-[r:commits]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'pd@com' AND b.hdx = '5'
+CREATE (a)-[r:commits]->(b)
+
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'mk@com' AND b.hdx = '6'
+CREATE (a)-[r:creates]->(b)
+
+MATCH (a1:Developer),(b1:Commits)
+WHERE a1.email = 'mi@com' AND b1.hdx = '7'
+CREATE (a1)-[r:creates]->(b1)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'to@com' AND b.hdx = '8'
+CREATE (a)-[r:creates]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'sa@com' AND b.hdx = '9'
+CREATE (a)-[r:creates]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'la@com' AND b.hdx = '10'
+CREATE (a)-[r:commits]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'la@com' AND b.hdx = '11'
+CREATE (a)-[r:commits]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'la@com' AND b.hdx = '12'
+CREATE (a)-[r:commits]->(b)
+
+MATCH (a:Developer),(b:Commits)
+WHERE a.email = 'pd@com' AND b.hdx = '13'
+CREATE (a)-[r:commits]->(b)
+
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'a.py' AND b.hdx = '1'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'c.py' AND b.hdx = '2'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'b.c' AND b.hdx = '3'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'a.py' AND b.hdx = '4'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'd.c' AND b.hdx = '5'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'a.py' AND b.hdx = '6'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'c.py' AND b.hdx = '7'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'c.py' AND b.hdx = '8'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'd.c' AND b.hdx = '9'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'b.c' AND b.hdx = '10'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'c.py' AND b.hdx = '11'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'd.c' AND b.hdx = '12'
+CREATE (b)-[r:modifies]->(a)
+
+MATCH (a:File),(b:Commits)
+WHERE a.filename= 'c.py' AND b.hdx = '13'
+CREATE (b)-[r:modifies]->(a)
+
+
+
+
+
+MATCH (a:Commits),(b:Commits)
+WHERE a.hdx = '4' AND b.hdx = '5'
+CREATE (a)-[r:parents]->(b)
+
+MATCH (a:Commits),(b:Commits)
+WHERE a.hdx = '3' AND b.hdx = '4'
+CREATE (a)-[r:parents]->(b)
+
+MATCH (a:Commits),(b:Commits)
+WHERE a.hdx = '2' AND b.hdx = '3'
+CREATE (a)-[r:parents]->(b)
+
+MATCH (a:Commits),(b:Commits)
+WHERE a.hdx = '1' AND b.hdx = '2'
+CREATE (a)-[r:parents]->(b)
