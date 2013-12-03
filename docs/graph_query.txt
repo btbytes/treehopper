@@ -17,7 +17,7 @@ Length of the commit messages in increasing order:
 MATCH (n:Developer)-[:commits]-(Commits)  RETURN  (n.name),(sum(length(Commits.message))) ORDER BY sum(length(Commits.message))
 
 Avarage message length:
-MATCH (n:Developer)-[:commits]-(Commits)  RETURN  (avg(length(Commits.message))) 
+MATCH (n:Developer)-[:commits]-(Commits)  RETURN  (avg(length(Commits.message)))
 
 Last committed person and commit id
 MATCH (n:Developer)-[:creates|:commits]-(Commits) WHERE ALL(x IN nodes(Commits) WHERE x>Commits.commit_date) RETURN n.name,Commits.hdx
@@ -27,3 +27,4 @@ MATCH (n:Developer)-[:creates]-(a)  RETURN  count(DISTINCT n.name)
 
 MATCH (n:Developer)-[:creates]-(a)-[:modifies]-file  RETURN n.name,file.filename ORDER BY n.name
 
+g

@@ -17,10 +17,15 @@ def main():
     graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
     time_index = graph_db.get_or_create_index(neo4j.Node, "TIME")
     calendar = GregorianCalendar(time_index)
+    #graph_db.create(
+    #        {"name": "Alice"},
+    #        (0, "BORN", calendar.day(1800, 1, 1)),
+    #        (0, "DIED", calendar.day(1900, 12, 31)),
+    #)
+
     graph_db.create(
-            {"name": "Alice"},
-            (0, "BORN", calendar.day(1800, 1, 1)),
-            (0, "DIED", calendar.day(1900, 12, 31)),
+            {"name": "Developer"},
+
     )
 
 if __name__ == '__main__':

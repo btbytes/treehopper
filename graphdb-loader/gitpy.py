@@ -16,7 +16,7 @@ from py2neo import neo4j, node, rel
 # sys.stdout = UTF8Writer(sys.stdout)
 
 repo = Repo("/Users/pradeep/src/requests")
-graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+
 
 heads = repo.heads
 commits = repo.iter_commits('master')
@@ -28,7 +28,7 @@ for commit in commits:
           'message': unicode(strip(commit.message)),
           'committed_date': commit.committed_date,
           'message': unicode(commit.message)
-      } 
+      }
     graph_db.create(nc)
 
     #for parent in commit.parents:
