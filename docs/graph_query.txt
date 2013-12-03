@@ -27,4 +27,6 @@ MATCH (n:Developer)-[:creates]-(a)  RETURN  count(DISTINCT n.name)
 
 MATCH (n:Developer)-[:creates]-(a)-[:modifies]-file  RETURN n.name,file.filename ORDER BY n.name
 
-g
+Given a month count commits per each day :
+for i=1:12
+MATCH (n:Commits) WHERE n.commit_month=i return count(n.commit_month),n.commit_day
