@@ -97,14 +97,14 @@ $(function () {
           <h4>Time Map</h4>
           <table>
             <tr>
-              {% for i in range(31) %}
+              {% for i in nmonths %}
               <th>{{i}}</th>
               {% endfor %}
             </tr>
-            {% for j in range(24) %}
+            {% for j in nhours %}
             <tr>
               <th>{{j}}</th>
-              {% for k in range(31) %}
+              {% for k in ndays %}
               <th>.</th>
               {% endfor %}
             </tr>
