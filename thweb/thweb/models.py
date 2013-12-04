@@ -10,7 +10,7 @@ class Repository(StructuredNode):
     imported = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
 
 
-class Contributor(StructuredNode):
+class Actor(StructuredNode):
     name = StringProperty(unique_index=True, required=True)
     email =  StringProperty()
 
@@ -22,7 +22,7 @@ class Commit(StructuredNode):
     ctime = DateTimeProperty()
     parent = RelationshipTo('Commit', 'CHILD_OF')
     repo = RelationshipTo('Repository', 'BELONGS_TO')
-    committer = RelationshipTo('Contributor', 'COMMITTED_BY')
+    committer = RelationshipTo('Actor', 'COMMITTED_BY')
 
 
 class File(StructuredNode):

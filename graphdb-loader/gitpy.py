@@ -30,12 +30,12 @@ for commit in commits:
           'message': unicode(commit.message)
       }
     #graph_db.create(nc)
-
-    #for parent in commit.parents:
-    #    print '\t%s' % (parent, )
+    print '%s' % (commit.hexsha, )
+    for parent in commit.parents:
+        print '\t%s' % (parent.hexsha, )
     #print 'Tree: ', commit.tree
     #print 'Authored Tree: ', commit.authored_tree
-    print unicode(commit.author)
+    #print unicode(commit.author)
     count += 1
 
 print 'Number of commits in the master: ', count

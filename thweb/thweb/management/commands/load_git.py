@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from thweb.models import Repository, Commit, Contributor, File, Directory
+from thweb.models import Repository, Commit, Actor, File, Directory
 from optparse import make_option
 from git import Repo
 from string import strip
@@ -58,14 +58,15 @@ class Command(BaseCommand):
                 nc.repo.connect(new_repo)
                 nc.save()
                 try:
-                    ccommitter = unicode(commit.committer).encode('ascii', 'ignore')
+                    ccommitter_name = unicode(commit.committer.name).encode('ascii', 'ignore')
+                    ccommitter_email = commit.committer.email
                     #print 'Querying committer: %s' % (ccommitter, )
-                    committer = Contributor.index.get(name=ccommitter)
+                    committer = Actor.index.get(name=ccommitter_name)
                     nc.committer.connect(committer)
                     nc.save()
                 except DoesNotExist, e:
                     #print '%s does not exist in db' %(ccommitter,)
-                    committer = Contributor(name=ccommitter)
+                    committer = Actor(name=ccommitter_name, email=ccommitter_email)
                     committer.save()
                     committer.refresh()
                     nc.committer.connect(committer)
@@ -75,5 +76,16 @@ class Command(BaseCommand):
             self.stdout.write('First pass - total commits: %d '  % (count, ))
 
             # second pass
-            #for commit in commits:
-            #    pass
+            commits = repo.iter_commits('master')
+            count = 0
+            for commit in commits:
+                nc = Commit.index.get(hexsha=commit.hexsha)
+                for parent in commit.parents:
+                    try:
+                        pc = Commit.index.get(hexsha=parent.hexsha)
+                        nc.parent.connect(pc)
+                        nc.save()
+                        count += 1
+                    except:
+                        self.stdout.write('Could not find parent(%s) of (%s)' % (parent.hexsha, commit.hexsha))
+            self.stdout.write('Second pass - total commits: %d' % (count, ))
