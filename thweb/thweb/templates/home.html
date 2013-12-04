@@ -65,7 +65,7 @@ $(function () {
       <div class="large-12 columns">
         <p>repository: <code>requests</code></p>
         <p>branches: <code>master</code> / <code>dev</code> </p>
-        <p>latest commit: <code>av48992kfvalf</code> by <a href="#">A U Thor</a></p>
+        <p>latest commit: <code>av48992kfvalf</code> by <a href="/user/">A U Thor</a></p>
 
       </div>
     </div>
@@ -97,7 +97,8 @@ $(function () {
           <h4>Time Map</h4>
           <table>
             <tr>
-              {% for i in nmonths %}
+              <th></th>
+              {% for i in ndays %}
               <th>{{i}}</th>
               {% endfor %}
             </tr>
