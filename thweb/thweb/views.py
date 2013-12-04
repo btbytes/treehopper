@@ -10,6 +10,7 @@ def home(request):
          'repositories': repos
      })
 
+
 def repoview(request, repo_name):
     return render(request, "repoview.html",
                   {'title': 'Repository view for %s' % (repo_name, ),
