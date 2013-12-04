@@ -14,7 +14,8 @@ class Treehopper(object):
         db = GraphDatabase("/Users/pradeep/tmp/gdb")
 
 
-        def create_domain_objects():
+        def _create_domain_objects(self):
+            "Create Domain Objects only once in the lifecycle of a repository"
             repositories = db.node()
             commits = db.node()
             developers = db.node()
@@ -22,8 +23,18 @@ class Treehopper(object):
             directories = db.node()
             tags = db.node()
 
-        def create_index(self, domain_object):
-            return db.node.indexes.create(name)
+        def _create_indexes(self):
+            "Create indexes only once in the lifecycle of a repository."
+            repositories_idx = create_index('repositories')
+            commits_idx = create_index('commits')
+            developers_idx = create_index('developers')
+            files_idx = create_index('files')
+            directories_idx = create_index('directories')
+            tags_idx = create_index('tags')
+
+
+        def create_index(self, dobj_name):
+            return db.node.indexes.create(dobj_name)
 
         def create_domain_object(self, domain_object, name):
             with db.transaction:
@@ -49,6 +60,10 @@ class Treehopper(object):
         def shutdown():
             db.shutdown()
 
-
 def main():
-    pass
+    th = Treehopper()
+    #run once
+    th._create_domain_objects()
+    th._create_indexes()
+    #~run once
+    th.shutdown()

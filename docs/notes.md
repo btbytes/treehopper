@@ -91,3 +91,8 @@ Use `neotool` -- python -m py2neo.tool
 
 -
   http://blog.safaribooksonline.com/2013/11/22/neo4j-2-0-a-giant-leap-for-graphkind/
+-
+  http://blog.neo4j.org/2010/03/modeling-categories-in-graph-database.html
+  -- mapping ER model to neo4j.
+- http://fooo.fr/~vjeux/github/github-recommandation/db/doc/manual/html/server-embedded.html
+  --  enabling neo4j web admin tool on the embedded server.

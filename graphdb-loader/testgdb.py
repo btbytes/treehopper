@@ -9,8 +9,17 @@ Neo4J graph database.
 import sys
 
 from string import strip
-from py2neo import neo4j, node, rel
+from py2neo import neo4j, node, rel, ogm
 from py2neo.calendar import GregorianCalendar
+
+
+class Commit(object):
+    def __init__(self, hexsha, message, ctime):
+        self.hexsha = hexsha
+
+
+    def __str__(self):
+        return self.hexsha
 
 
 def main():
