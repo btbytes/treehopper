@@ -1,9 +1,16 @@
 from django.core.management.base import BaseCommand, CommandError
-from thweb.models import Repository, Commit, Developer, File, Directory
+from thweb.models import Repository, Commit, Contributor, File, Directory
 from optparse import make_option
 from git import Repo
 from string import strip
 import sys
+from datetime import datetime
+from neomodel.exception import DoesNotExist
+import logging
+
+logging.basicConfig()
+
+def dt(u): return datetime.utcfromtimestamp(u)
 
 class Command(BaseCommand):
     args = "<option>"
@@ -22,7 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not options['url']:
-            self.stdout.write('load_git was not given a repo location')         
+            self.stdout.write('load_git was not given a repo location')
             sys.exit(0)
         else:
             self.stdout.write('load_git called with repo location: %s' % (options['url'], ))
@@ -40,14 +47,33 @@ class Command(BaseCommand):
             commits = repo.iter_commits('master')
             count = 0
 
-
+            # first pass
             for commit in commits:
                 nc = Commit(hexsha=commit.hexsha,
-                    message=unicode(strip(commit.message)),
-                    ctime=commit.committed_date,                    
+                            message=unicode(strip(commit.message)),
+                            summary=unicode(strip(commit.summary)),
+                            ctime=dt(commit.committed_date),
                     )
                 nc.save()
                 nc.repo.connect(new_repo)
-                nc.save()                
+                nc.save()
+                try:
+                    ccommitter = unicode(commit.committer).encode('ascii', 'ignore')
+                    #print 'Querying committer: %s' % (ccommitter, )
+                    committer = Contributor.index.get(name=ccommitter)
+                    nc.committer.connect(committer)
+                    nc.save()
+                except DoesNotExist, e:
+                    #print '%s does not exist in db' %(ccommitter,)
+                    committer = Contributor(name=ccommitter)
+                    committer.save()
+                    committer.refresh()
+                    nc.committer.connect(committer)
+                    nc.save()
+
                 count += 1
-            self.stdout.write('total commits: %d '  % (count, ))
+            self.stdout.write('First pass - total commits: %d '  % (count, ))
+
+            # second pass
+            #for commit in commits:
+            #    pass
