@@ -72,6 +72,15 @@ $(function () {
     </div>
 
     <div class="row">
+      <div class="large-12 columns">
+          <h4>Time Map</h4>
+          <iframe src="/repo/{{repo_name}}/calview" 
+          marginwidth="0" marginheight="0" scrolling="no"
+          style="border: 0px;"></iframe> 
+      </div>
+    </div><!-- row -->
+
+    <div class="row">
       <div class="large-6 columns">
         <div class="panel">
           <h4>Commit History</h4>
@@ -92,34 +101,13 @@ $(function () {
         </div>
       </div>
       <div class="large-6 columns">
-        <div class="panel">
           <h4>Commits by Volume</h4>
-          <p>
-        </div>
+          <p></p>
+          <h4>Net commits</h4>
+          <p>insert histogram here</p>
       </div>
-
     </div><!--row-->
 
-    <div class="row">
-      <div class="large-12 columns">
-          <h4>Time Map</h4>
-          <iframe src="/repo/{{repo_name}}/calview" 
-          marginwidth="0" marginheight="0" scrolling="no"
-          style="border: 0px;"></iframe> 
-      </div>
-    </div><!-- row -->
-
-    <div class="row">
-      <div class="large-6 columns">
-        <h4>Commits by volume</h4>
-        <div id="commitvol" style="min-width: 110px; height: 200px; margin: 0 auto"></div>
-
-      </div>
-      <div class="large-6 columns">
-        <h4>Net commits</h4>
-        <p>insert histogram here</p>
-      </div>
-    </div><!-- row -->
 
     <div class="row">
       <p>Ratio of Commits to Comments:</p>
