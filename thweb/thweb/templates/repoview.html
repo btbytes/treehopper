@@ -65,7 +65,8 @@ $(function () {
       <div class="large-12 columns">
         <p>Repository: <code>{{repo_name}}</code></p>
         <!-- p>Branches: <code>master</code> / <code>dev</code> </p -->
-        <p>latest commit: <code>av48992kfvalf</code> by <a href="/user/">A U Thor</a></p>
+        <!-- p>latest commit: <code>av48992kfvalf</code>
+        by <a href="/user/">A U Thor</a></p -->
 
       </div>
     </div>
@@ -74,12 +75,20 @@ $(function () {
       <div class="large-6 columns">
         <div class="panel">
           <h4>Commit History</h4>
-          <ul>
-            <li>12adfsdf</li>
-            <li>12adfsdf</li>
-            <li>12adfsdf</li>
-            <li>12adfsdf</li>
-          </ul>
+          <table>
+            <tr>
+              <th>Summary</th>
+              <th>Time</th>
+              <th>Author</th>
+            </tr>
+            {% for rc in last_n_commits.0 %}
+            <tr>
+              <td>{{rc.0}}</td>
+              <td>{{rc.1}}</td>
+              <td>{{rc.2}}</td>
+            </tr>
+            {% endfor %}
+          </table>
         </div>
       </div>
       <div class="large-6 columns">

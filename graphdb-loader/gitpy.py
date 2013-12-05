@@ -8,6 +8,7 @@ gitpy.py -- program to test out some gitpython api.
 import sys
 
 from git import Repo
+from git.diff import Diff
 from string import strip
 from py2neo import neo4j, node, rel
 
@@ -15,7 +16,7 @@ from py2neo import neo4j, node, rel
 # UTF8Writer = codecs.getwriter('utf8')
 # sys.stdout = UTF8Writer(sys.stdout)
 
-repo = Repo("/Users/pradeep/src/requests")
+repo = Repo("/Users/pradeep/src/hakyll")
 
 
 heads = repo.heads
@@ -30,10 +31,15 @@ for commit in commits:
           'message': unicode(commit.message)
       }
     #graph_db.create(nc)
-    print '%s' % (commit.hexsha, )
-    for parent in commit.parents:
-        print '\t%s' % (parent.hexsha, )
-    #print 'Tree: ', commit.tree
+    print 'commit: %s' % (commit.hexsha, )
+    #for parent in commit.parents:
+    #    print '\t%s' % (parent.hexsha, )
+    print '\ttree: ', commit.tree
+    for t in commit.tree.blobs:
+        print '\t\t',t, t.mime_type, t.abspath, t.name, t.path, t.size
+        #print dir(t)
+        #diff = Diff(commit, t)
+        #print '\t\t\t', diff
     #print 'Authored Tree: ', commit.authored_tree
     #print unicode(commit.author)
     count += 1

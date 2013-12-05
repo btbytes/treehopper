@@ -9,6 +9,16 @@ class Repository(StructuredNode):
     url = StringProperty()
     imported = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
 
+    def last_n_commits(self, n):
+        "return the last `n` commits in this repo"
+        results = self.cypher("""START myrepo=node({self})
+MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->(myrepo)
+WITH commit, committer
+RETURN commit.summary AS summary, commit.ctime as ctime, committer.name as committer
+ORDER BY (commit.ctime) DESC
+        LIMIT 10;""")
+        return results
+
 
 class Actor(StructuredNode):
     name = StringProperty(unique_index=True, required=True)
