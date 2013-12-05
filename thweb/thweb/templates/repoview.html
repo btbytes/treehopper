@@ -102,27 +102,11 @@ $(function () {
 
     <div class="row">
       <div class="large-12 columns">
-        <div class="panel">
           <h4>Time Map</h4>
-          <table>
-            <tr>
-              <th></th>
-              {% for i in ndays %}
-              <th>{{i}}</th>
-              {% endfor %}
-            </tr>
-            {% for j in nhours %}
-            <tr>
-              <th>{{j}}</th>
-              {% for k in ndays %}
-              <th>.</th>
-              {% endfor %}
-            </tr>
-            {% endfor %}
-          </table>
-        </div>
+          <iframe src="/repo/{{repo_name}}/calview" 
+          marginwidth="0" marginheight="0" scrolling="no"
+          style="border: 0px;"></iframe> 
       </div>
-
     </div><!-- row -->
 
     <div class="row">

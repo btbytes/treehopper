@@ -49,10 +49,12 @@ class Command(BaseCommand):
 
             # first pass
             for commit in commits:
+                date_ = dt(commit.committed_date).strftime("%Y-%m-%d")
                 nc = Commit(hexsha=commit.hexsha,
                             message=unicode(strip(commit.message)),
                             summary=unicode(strip(commit.summary)),
                             ctime=dt(commit.committed_date),
+                            date=date_,
                     )
                 nc.save()
                 nc.repo.connect(new_repo)

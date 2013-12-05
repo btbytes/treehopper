@@ -53,3 +53,61 @@ WITH commit, committer
 RETURN collect(commit.summary) AS commits, commit.ctime as time, collect(committer.name) as committers
 ORDER BY (commit.ctime) DESC
 LIMIT 10;
+
+
+* Get the commits belonging to repo `hakyll` on the date `2012-02-06`
+
+MATCH (c)
+WHERE c.date='2012-02-06'
+return '2012-02-06', count(c);
+
+
+
+* Wild card matching -- return all commits in the month of 2012-02
+
+MATCH (c)
+WITH c as c, '2012-02-.*' as pat
+WHERE c.date =~ pat
+return pat, count(c);
+
+
+* The same as above for a particular repo
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (c)
+WITH c as c, '2012-02-.*' as pat
+WHERE c.date =~ pat 
+return pat, count(c);
+
+* return the date and number of commits for all days of an year
+
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (c)
+WITH c as c, '2012-.*' as pat
+WHERE c.date =~ pat 
+return c.date as date, count(c)
+
+* Return the very last day of commit for the repo
+
+START myrepo=node:Repository(name="hakyll")
+MATCH(commit)
+WITH commit
+WHERE HAS(commit.date)
+RETURN commit.date as date
+ORDER BY commit.ctime DESC
+LIMIT 1
+
+* Return the very first day of commit for the repo
+
+START myrepo=node:Repository(name="hakyll")
+MATCH(commit)
+WITH commit
+WHERE HAS(commit.date)
+RETURN commit.date as date
+ORDER BY commit.ctime
+LIMIT 1
+
+
+
+

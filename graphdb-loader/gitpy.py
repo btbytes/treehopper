@@ -23,7 +23,7 @@ heads = repo.heads
 commits = repo.iter_commits('master')
 count = 0
 
-
+prev_commit = None
 for commit in commits:
     nc = {'hexsha': commit.hexsha,
           'message': unicode(strip(commit.message)),
@@ -32,16 +32,23 @@ for commit in commits:
       }
     #graph_db.create(nc)
     print 'commit: %s' % (commit.hexsha, )
-    #for parent in commit.parents:
-    #    print '\t%s' % (parent.hexsha, )
-    print '\ttree: ', commit.tree
-    for t in commit.tree.blobs:
-        print '\t\t',t, t.mime_type, t.abspath, t.name, t.path, t.size
-        #print dir(t)
-        #diff = Diff(commit, t)
-        #print '\t\t\t', diff
-    #print 'Authored Tree: ', commit.authored_tree
-    #print unicode(commit.author)
+    changed_files = []
+    for x in commit.diff(prev_commit):
+        try:
+            if x.a_blob.path not in changed_files:
+                changed_files.append(x.a_blob.path)
+        except:
+            pass
+
+        try:
+            if x.b_blob is not None and x.b_blob.path not in changed_files:
+                changed_files.append(x.b_blob.path)
+        except:
+            pass
+    prev_commit = commit
     count += 1
+    print '\t changed files: '
+    for cf in changed_files:
+        print '\t\t', cf
 
 print 'Number of commits in the master: ', count
