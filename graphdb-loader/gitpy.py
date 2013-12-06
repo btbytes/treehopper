@@ -22,9 +22,10 @@ repo = Repo("/Users/pradeep/src/hakyll")
 heads = repo.heads
 commits = repo.iter_commits('master')
 count = 0
-
+limit = 0
 prev_commit = None
 for commit in commits:
+    limit +=1 
     nc = {'hexsha': commit.hexsha,
           'message': unicode(strip(commit.message)),
           'committed_date': commit.committed_date,
@@ -51,4 +52,7 @@ for commit in commits:
     for cf in changed_files:
         print '\t\t', cf
 
+    if limit > 10:
+        print 'done...'
+        sys.exit(0)
 print 'Number of commits in the master: ', count

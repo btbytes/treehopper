@@ -133,3 +133,33 @@ MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
 WITH commit, committer
 WHERE HAS(commit.hexsha)
 RETURN DISTINCT committer.name, committer.email
+
+
+* `n` most active committers
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (committer)<-[COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+with commit, committer
+WHERE HAS(committer.name)
+RETURN DISTINCT committer.name, COUNT(commit)
+ORDER BY COUNT(commit) DESC
+LIMIT 5
+
+* TBD: Commit with the largest number of files modified
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (file)-[:MODIFIED_BY]->(commit)-[:BELONGS_TO]->myrepo
+WITH file, commit
+WHERE HAS(commit.hexsha)
+RETURN DISTINCT commit.hexsha, COUNT(commit) 
+ORDER By COUNT(commit) DESC
+LIMIT 5
+
+* Who has worked the longest on this codebase.
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (committer)<-[COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH committer, commit 
+RETURN committer.name, commit.date
+ORDER BY commit.ctime
+LIMIT 1

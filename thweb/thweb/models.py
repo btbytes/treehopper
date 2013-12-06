@@ -84,6 +84,28 @@ WHERE c.date =~ pat
 return c.date as date, count(c) as count""" % (pattern, ))
         return results
 
+    def most_commits_by_n_users(self, n=5):
+        "return the total commits by n most active users"
+        results = self.cypher("""START myrepo=node({self})
+MATCH (committer)<-[COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+with commit, committer
+WHERE HAS(committer.name)
+RETURN DISTINCT committer.name, COUNT(commit)
+ORDER BY COUNT(commit) DESC
+LIMIT %d
+""" % (n, ))
+        return results[0]
+
+    def oldest_committer(self):
+        "return the name of the developer who has worked the longest"
+        results = self.cypher("""START myrepo=node({self})
+MATCH (committer)<-[COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH committer, commit 
+RETURN committer.name, commit.date
+ORDER BY commit.ctime
+LIMIT 1
+""")
+        return results[0][0]        
 
 class Actor(StructuredNode):
     name = StringProperty(unique_index=True, required=True)
@@ -100,11 +122,14 @@ class Commit(StructuredNode):
     committer = RelationshipTo('Actor', 'COMMITTED_BY')
     date = StringProperty()
 
+class SourceType(StructuredNode):
+    name = StringProperty(unique_index=True, required=True)
+
 class File(StructuredNode):
     path = StringProperty(unique_index=True, required=True)
-    belongs_to = RelationshipTo('Directory', 'BELONGS_TO')
+    commit = RelationshipTo('Commit', 'MODIFIED_BY')
+    sourcetype = RelationshipTo('SourceType', 'IS_A')
 
-
-class Directory(StructuredNode):
-    path = StringProperty(unique_index=True, required=True)
-    has_a = RelationshipTo(['Directory', 'File'], 'HAS_A')
+#class Directory(StructuredNode):
+#    path = StringProperty(unique_index=True, required=True)
+#    has_a = RelationshipTo(['Directory', 'File'], 'HAS_A')

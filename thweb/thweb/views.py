@@ -21,7 +21,8 @@ def repoview(request, repo_name):
                    'repo_name': repo_name,
                    'last_n_commits': repo.last_n_commits(10),
                    'total_commits': repo.total_commits(),
-                   'total_committers': repo.total_committers()
+                   'total_committers': repo.total_committers(),
+                   'oldest_committer': repo.oldest_committer,
                    })
 
 def user(request):
@@ -52,4 +53,7 @@ def calview(request, repo_name):
                    })
 
 def commitvol(request, repo_name):
-    return render(request, "commitvol.html")
+  repo_obj = Repository.index.get(name=repo_name)
+  data = repo_obj.most_commits_by_n_users(5)
+  return render(request, "commitvol.html", {'commitvol': data} )
+  
