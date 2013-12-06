@@ -17,13 +17,13 @@ def home(request):
 def repoview(request, repo_name):
     repo_obj = Repository.index.get(name=repo_name)
     last_n_commits = repo_obj.last_n_commits(10)
+    total_commits = repo_obj.total_commits()
     return render(request, "repoview.html",
                   {'title': 'Repository view for %s' % (repo_name, ),
                    'repo_name': repo_name,
                    'last_n_commits': last_n_commits,
-                   'ndays': range(1,32),
-                   'nmonths': range(1,13),
-                   'nhours': range(1,25) })
+                   'total_commits': total_commits}
+                   )
 
 def user(request):
     ctx = {'title': "User",
@@ -46,8 +46,8 @@ def caldata(request, repo_name, year):
 def calview(request, repo_name):
     cur_year = datetime.now().year
     return render(request, "calview.html",
-                  {"st_year": cur_year -2,
-                   "end_year": cur_year-1,
-                   "cur_year": cur_year-2,
+                  {"st_year": cur_year,
+                   "end_year": cur_year+1,
+                   "cur_year": cur_year,
                    "repo_name": repo_name
                    })

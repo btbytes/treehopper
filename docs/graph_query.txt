@@ -109,5 +109,10 @@ ORDER BY commit.ctime
 LIMIT 1
 
 
+* Total number of commits in the repository
 
-
+START myrepo=node:Repository(name="hakyll")
+MATCH(commit)
+WITH commit
+WHERE HAS(commit.hexsha)
+RETURN count(commit) as total_commits

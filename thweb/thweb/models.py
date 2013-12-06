@@ -52,14 +52,22 @@ return r;""")
 
 
     def commit_counts_by_day_for_year(self, year):
-        print "commit_counts_by_day_for_year -- %s" % (year, )
+        "Return commit_counts_by_day_for_year"
         pattern = '%s-.*' % (year, )
         results = self.cypher("""START myrepo=node({self})
-MATCH (c)
+MATCH (c)-[:BELONGS_TO]->(myrepo)
 WITH c as c, '%s' as pat
 WHERE c.date =~ pat
 return c.date as date, count(c) as count""" % (pattern, ))
         return results
+
+    def total_commits(self):
+        "return the total number of commits in the repo"
+        results = self.cypher("""START myrepo=node({self})
+MATCH(commit)
+WITH commit
+WHERE HAS(commit.hexsha)
+RETURN count(commit) as total_commits""")
 
 
 class Actor(StructuredNode):
@@ -75,7 +83,7 @@ class Commit(StructuredNode):
     parent = RelationshipTo('Commit', 'CHILD_OF')
     repo = RelationshipTo('Repository', 'BELONGS_TO')
     committer = RelationshipTo('Actor', 'COMMITTED_BY')
-    date = IntegerProperty()
+    date = StringProperty()
 
 class File(StructuredNode):
     path = StringProperty(unique_index=True, required=True)

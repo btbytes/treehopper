@@ -64,6 +64,13 @@ $(function () {
     <div class="row">
       <div class="large-12 columns">
         <p>Repository: <code>{{repo_name}}</code></p>
+        <table>
+        <tr>
+        <th>
+        </th>
+        <th>
+        </th>
+        </tr>
         <!-- p>Branches: <code>master</code> / <code>dev</code> </p -->
         <!-- p>latest commit: <code>av48992kfvalf</code>
         by <a href="/user/">A U Thor</a></p -->
@@ -73,7 +80,7 @@ $(function () {
 
     <div class="row">
       <div class="large-12 columns">
-          <h4>Time Map</h4>
+          <h4>Calendar View</h4>
           <iframe src="/repo/{{repo_name}}/calview" 
           marginwidth="0" marginheight="0" scrolling="no"
           style="border: 0px;"></iframe> 
@@ -102,7 +109,7 @@ $(function () {
       </div>
       <div class="large-6 columns">
           <h4>Commits by Volume</h4>
-          <p></p>
+          <div id="commitvol"/>
           <h4>Net commits</h4>
           <p>insert histogram here</p>
       </div>
