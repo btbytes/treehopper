@@ -145,15 +145,43 @@ RETURN DISTINCT committer.name, COUNT(commit)
 ORDER BY COUNT(commit) DESC
 LIMIT 5
 
-* TBD: Commit with the largest number of files modified
+* Commits with the largest number of files modified
 
 START myrepo=node:Repository(name="hakyll")
 MATCH (file)-[:MODIFIED_BY]->(commit)-[:BELONGS_TO]->myrepo
 WITH file, commit
 WHERE HAS(commit.hexsha)
-RETURN DISTINCT commit.hexsha, COUNT(commit) 
+RETURN DISTINCT commit.hexsha, COUNT(commit)
 ORDER By COUNT(commit) DESC
 LIMIT 5
+
+* List top file types (this has duplicates)
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (c)<-[:MODIFIED_BY]-(a)-[:IS_A]->(b)
+WITH a,b,c
+WHERE HAS(a.path)
+RETURN DISTINCT b.name, count(b)
+ORDER BY count(b) DESC
+
+* List top file types (count only once)
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (a)-[:IS_A]->(b)
+WITH a,b
+WHERE HAS(a.path)
+RETURN DISTINCT b.name, count(b)
+ORDER BY count(b) DESC
+
+
+* Widest skillset
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH commit, committer
+MATCH (sourcetype)<-[:IS_A]-(file)<-[:MODIFIED_BY]-(commit)
+RETURN committer, count(sourcetype)
+
 
 * Who has worked the longest on this codebase.
 

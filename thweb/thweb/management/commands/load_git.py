@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from thweb.models import Repository, Commit, Actor, File, SourceType
 from optparse import make_option
 from git import Repo
-from string import strip,lower, upper
+from string import strip,lower, capitalize
 import sys
 import os
 from datetime import datetime
@@ -39,7 +39,7 @@ def get_sourcetype(fpath):
         return file_type[ext]
     else:
         if len(ext) > 1:
-            return upper(ext.replace('.',''))
+            return capitalize(ext.replace('.',''))
     return 'General'
 
 
