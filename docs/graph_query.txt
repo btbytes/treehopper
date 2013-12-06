@@ -112,7 +112,24 @@ LIMIT 1
 * Total number of commits in the repository
 
 START myrepo=node:Repository(name="hakyll")
-MATCH(commit)
+MATCH (commit)-[:BELONGS_TO]->myrepo
 WITH commit
 WHERE HAS(commit.hexsha)
 RETURN count(commit) as total_commits
+
+* Total number of committers in the repository
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH commit, committer
+WHERE HAS(commit.hexsha)
+RETURN count(DISTINCT committer.name)
+
+
+* All the committers
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH commit, committer
+WHERE HAS(commit.hexsha)
+RETURN DISTINCT committer.name, committer.email

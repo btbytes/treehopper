@@ -63,14 +63,21 @@ $(function () {
 {% block body %}
     <div class="row">
       <div class="large-12 columns">
-        <p>Repository: <code>{{repo_name}}</code></p>
+        <h3>Repository: <code>{{repo_name}}</code></h3>
+        <h4>Stats</h4>
         <table>
+        <tbody>
         <tr>
-        <th>
-        </th>
-        <th>
-        </th>
+        <td>Committers</td>
+        <td>{{total_committers}}</td>
         </tr>
+        <tr>
+        <td>Total Commits</td>
+        <td>{{total_commits}}</td>
+        </tr>
+        
+        </tbody>
+        </table>
         <!-- p>Branches: <code>master</code> / <code>dev</code> </p -->
         <!-- p>latest commit: <code>av48992kfvalf</code>
         by <a href="/user/">A U Thor</a></p -->

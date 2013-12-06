@@ -9,12 +9,35 @@ class Repository(StructuredNode):
     url = StringProperty()
     imported = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
 
+    def total_committers(self):
+        "return the total number of commiters in this repository"
+        committers, md = self.cypher("""START myrepo=node({self})
+MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH commit, committer
+WHERE HAS(commit.hexsha)
+RETURN count(DISTINCT committer.name)
+""")
+
+        return committers[0][0]
+
+    def total_commits(self):
+        "return the total number of commits in the repo"
+        commits, md = self.cypher("""START myrepo=node({self})
+MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH commit
+WHERE HAS(commit.hexsha)
+RETURN count(commit) as total_commits
+""")
+        return commits[0][0]
+
+
+
     def last_n_commits(self, n):
         "return the last `n` commits in this repo"
         results = self.cypher("""START myrepo=node({self})
 MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->(myrepo)
 WITH commit, committer
-RETURN commit.summary AS summary, commit.ctime as ctime, committer.name as committer
+RETURN commit.summary AS summary, commit.date as date, committer.name as committer
 ORDER BY (commit.ctime) DESC
         LIMIT 10;""")
         return results
@@ -60,14 +83,6 @@ WITH c as c, '%s' as pat
 WHERE c.date =~ pat
 return c.date as date, count(c) as count""" % (pattern, ))
         return results
-
-    def total_commits(self):
-        "return the total number of commits in the repo"
-        results = self.cypher("""START myrepo=node({self})
-MATCH(commit)
-WITH commit
-WHERE HAS(commit.hexsha)
-RETURN count(commit) as total_commits""")
 
 
 class Actor(StructuredNode):
