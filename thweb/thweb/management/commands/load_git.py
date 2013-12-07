@@ -28,7 +28,11 @@ file_type = {
     '.rst': 'Text',
     '.rmd': 'Text',
     '.hs': 'Haskell',
-    '.cabal': 'Cabal'
+    '.cabal': 'Cabal',
+    '.cs', 'C#',
+    '.fs', 'F#',
+    '.pl', 'Perl',
+    '.pm', 'Perl',
 }
 
 
