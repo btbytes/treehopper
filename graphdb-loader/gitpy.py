@@ -19,18 +19,19 @@ from py2neo import neo4j, node, rel
 repo = Repo("/Users/pradeep/src/hakyll")
 
 
-heads = repo.heads
-commits = repo.iter_commits('master')
-count = 0
-limit = 0
-prev_commit = None
-for commit in commits:
-    limit +=1 
-    nc = {'hexsha': commit.hexsha,
-          'message': unicode(strip(commit.message)),
-          'committed_date': commit.committed_date,
-          'message': unicode(commit.message)
-      }
+def changed_files():
+    heads = repo.heads
+    commits = repo.iter_commits('master')
+    count = 0
+    limit = 0
+    prev_commit = None
+    for commit in commits:
+        limit +=1
+        nc = {'hexsha': commit.hexsha,
+              'message': unicode(strip(commit.message)),
+              'committed_date': commit.committed_date,
+              'message': unicode(commit.message)
+        }
     #graph_db.create(nc)
     print 'commit: %s' % (commit.hexsha, )
     changed_files = []
@@ -46,13 +47,23 @@ for commit in commits:
                 changed_files.append(x.b_blob.path)
         except:
             pass
-    prev_commit = commit
-    count += 1
-    print '\t changed files: '
-    for cf in changed_files:
-        print '\t\t', cf
+            prev_commit = commit
+            count += 1
+            print '\t changed files: '
+            for cf in changed_files:
+                print '\t\t', cf
 
     if limit > 10:
         print 'done...'
         sys.exit(0)
-print 'Number of commits in the master: ', count
+        print 'Number of commits in the master: ', count
+
+
+def main():
+    tags = repo.tags
+    for tag in tags:
+        print 'tag: ', tag
+        print '\tcommit: ', tag.commit
+
+if __name__ == '__main__':
+    main()

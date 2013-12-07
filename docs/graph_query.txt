@@ -191,3 +191,10 @@ WITH committer, commit
 RETURN committer.name, commit.date
 ORDER BY commit.ctime
 LIMIT 1
+
+* List of commits with tags
+
+START myrepo=node:Repository(name="hakyll")
+MATCH (commit)<-[:BELONGS_TO]->myrepo
+WHERE HAS(commit.tag)
+RETURN commit.hexsha, commit.date, commit.tag

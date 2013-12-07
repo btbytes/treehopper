@@ -19,7 +19,8 @@ def repoview(request, repo_name):
     return render(request, "repoview.html",
                   {'title': 'Repository view for %s' % (repo_name, ),
                    'repo_name': repo_name,
-                   'last_n_commits': repo.last_n_commits(10),
+                   'last_n_commits': repo.last_n_commits(),
+                   'last_n_tags': repo.last_n_tags(),
                    'total_commits': repo.total_commits(),
                    'total_committers': repo.total_committers(),
                    'oldest_committer': repo.oldest_committer,
@@ -55,14 +56,14 @@ def calview(request, repo_name):
 def commitvol(request, repo_name):
     repo_obj = Repository.index.get(name=repo_name)
     data = repo_obj.most_commits_by_n_users(5)
-    return render(request, "commitvol.html", 
+    return render(request, "commitvol.html",
             {'data_header': 'Developer,Commits',
             'data': data} )
 
 def langpop(request, repo_name):
     repo_obj = Repository.index.get(name=repo_name)
     data = repo_obj.langpopularity()
-    return render(request, "commitvol.html", 
+    return render(request, "commitvol.html",
             {'data_header': 'Developer,Commits',
             'data': data})
 

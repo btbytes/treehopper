@@ -9,7 +9,7 @@ from datetime import datetime
 from neomodel.exception import DoesNotExist
 import logging
 
-logging.basicConfig()
+logging.basicConfig(filename="thlog.log", level=logging.ERROR)
 
 def dt(u): return datetime.utcfromtimestamp(u)
 
@@ -29,10 +29,12 @@ file_type = {
     '.rmd': 'Text',
     '.hs': 'Haskell',
     '.cabal': 'Cabal',
-    '.cs', 'C#',
-    '.fs', 'F#',
-    '.pl', 'Perl',
-    '.pm', 'Perl',
+    '.cs': 'C#',
+    '.fs': 'F#',
+    '.pl': 'Perl',
+    '.pm': 'Perl',
+    '.png': 'PNG',
+    '.xml': 'XML',
 }
 
 
@@ -100,12 +102,10 @@ class Command(BaseCommand):
                 try:
                     ccommitter_name = unicode(commit.committer.name).encode('ascii', 'ignore')
                     ccommitter_email = commit.committer.email
-                    #print 'Querying committer: %s' % (ccommitter, )
                     committer = Actor.index.get(name=ccommitter_name)
                     nc.committer.connect(committer)
                     nc.save()
                 except DoesNotExist, e:
-                    #print '%s does not exist in db' %(ccommitter,)
                     committer = Actor(name=ccommitter_name, email=ccommitter_email)
                     committer.save()
                     committer.refresh()
@@ -128,16 +128,15 @@ class Command(BaseCommand):
                         pass
                 prev_commit = commit
                 for cf in changed_files:
-                    print '\t\t', cf
                     try:
-                        
+
                         f = File.index.get(path=cf)
                         stname = get_sourcetype(cf)
                         f.save()
                         f.refresh()
                         try:
                             st = SourceType.index.get(name=stname)
-                            f.sourcetype.connect(st)                            
+                            f.sourcetype.connect(st)
                         except:
                             st = SourceType(name=stname)
                             st.save()
@@ -151,7 +150,7 @@ class Command(BaseCommand):
                         f.refresh()
                         f.commit.connect(nc)
                         f.save()
-                # one commit handled.    
+                # one commit handled.
                 count += 1
             self.stdout.write('First pass - total commits: %d '  % (count, ))
 
@@ -169,3 +168,14 @@ class Command(BaseCommand):
                     except:
                         self.stdout.write('Could not find parent(%s) of (%s)' % (parent.hexsha, commit.hexsha))
             self.stdout.write('Second pass - total commits: %d' % (count, ))
+
+
+            # add tags
+            tags = repo.tags
+            for tag in tags:
+                try:
+                    nc = Commit.index.get(hexsha=tag.commit)
+                    nc.tag = str(tag)
+                    nc.save()
+                except:
+                    logging.exception('could not find commit(%s) for tag(%s)' % (tag.commit, tag))

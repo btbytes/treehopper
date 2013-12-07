@@ -32,12 +32,24 @@ RETURN count(commit) as total_commits
 
 
 
-    def last_n_commits(self, n):
+    def last_n_commits(self, n=10):
         "return the last `n` commits in this repo"
         results = self.cypher("""START myrepo=node({self})
 MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->(myrepo)
 WITH commit, committer
 RETURN commit.summary AS summary, commit.date as date, committer.name as committer
+ORDER BY (commit.ctime) DESC
+        LIMIT 10;""")
+        return results
+
+
+    def last_n_tags(self, n=5):
+        "return the last `n` tags in this repo"
+        results = self.cypher("""START myrepo=node({self})
+MATCH (committer)<-[:COMMITTED_BY]- (commit)<-[:BELONGS_TO]->myrepo
+WHERE HAS(commit.tag)
+with commit, committer
+RETURN commit.tag as release, commit.date as date, committer.name as committer
 ORDER BY (commit.ctime) DESC
         LIMIT 10;""")
         return results
@@ -53,6 +65,7 @@ RETURN commit.date as date
 ORDER BY commit.ctime
 LIMIT 1
 """)
+
 
     def last_commit_date(self):
         "return the last commit date for this repo"
@@ -100,12 +113,12 @@ LIMIT %d
         "return the name of the developer who has worked the longest"
         results = self.cypher("""START myrepo=node({self})
 MATCH (committer)<-[COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
-WITH committer, commit 
+WITH committer, commit
 RETURN committer.name, commit.date
 ORDER BY commit.ctime
 LIMIT 1
 """)
-        return results[0][0]        
+        return results[0][0]
 
     def langpopularity(self):
         "return the number of files of all source file types"
@@ -128,10 +141,12 @@ class Commit(StructuredNode):
     message = StringProperty()
     summary = StringProperty()
     ctime = DateTimeProperty()
+    date = StringProperty()
+    tag = StringProperty()
     parent = RelationshipTo('Commit', 'CHILD_OF')
     repo = RelationshipTo('Repository', 'BELONGS_TO')
     committer = RelationshipTo('Actor', 'COMMITTED_BY')
-    date = StringProperty()
+
 
 class SourceType(StructuredNode):
     name = StringProperty(unique_index=True, required=True)

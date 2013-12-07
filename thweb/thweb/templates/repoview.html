@@ -3,47 +3,35 @@
 {% block body %}
     <div class="row">
       <h3>Repository: <code>{{repo_name}}</code></h3>
-      <div class="large-6 columns" id="stats">        
-        <h4>Stats</h4>
-        <table>
-        <tbody>
-        <tr>
-        <td>Committers (bus factor)</td>
-        <td>{{total_committers}}</td>
-        </tr>
-        <tr>
-        <td>Total Commits</td>
-        <td>{{total_commits}}</td>
-        </tr>
-        
-        </tbody>
-        </table>
-        <!-- p>Branches: <code>master</code> / <code>dev</code> </p -->
-        <!-- p>latest commit: <code>av48992kfvalf</code>
-        by <a href="/user/">A U Thor</a></p -->
-      </div><!-- #stats -->
+
+      <div class="large-6 columns" id="langpop">
+          <h4>Language Statistics</h4>
+          <iframe src="/repo/{{repo_name}}/langpop"
+          marginwidth="0" marginheight="0" scrolling="no"
+          style="border: 0px;"></iframe>
+      </div><!-- #langpop -->
+
       <div class="large-6 columns" id="commitvol">
       <h4>Top 5 committers</h4>
-      <iframe src="/repo/{{repo_name}}/commitvol" 
+      <iframe src="/repo/{{repo_name}}/commitvol"
           marginwidth="0" marginheight="0" scrolling="no"
           style="border: 0px;"></iframe>
       </div><!-- #commitvol -->
     </div>
 
     <div class="row">
-      <div class="large-12 columns">
+      <div class="large-12 columns" id="calview">
           <h4>Calendar View</h4>
-          <iframe src="/repo/{{repo_name}}/calview" 
+          <iframe src="/repo/{{repo_name}}/calview"
           marginwidth="0" marginheight="0" scrolling="no"
-          style="border: 0px;"></iframe> 
-      </div>
+          style="border: 0px;"></iframe>
+      </div><!-- #calview -->
     </div><!-- row -->
 
     <div class="row">
       <div class="large-6 columns">
-        <div class="panel">
-        <p>{{oldest_committer.0 }} has worked the longest on this project (since {{oldest_committer.1}}).</p>
           <h4>Commit History</h4>
+        <div class="panel">
           <table>
             <tr>
               <th>Summary</th>
@@ -58,14 +46,32 @@
             </tr>
             {% endfor %}
           </table>
+        <p>{{oldest_committer.0 }} has worked the longest on this project (since {{oldest_committer.1}}).</p>
+
+
         </div>
       </div>
-      <div class="large-6 columns">
-          <h4>Language Statistics</h4>
-          <iframe src="/repo/{{repo_name}}/langpop" 
-          marginwidth="0" marginheight="0" scrolling="no"
-          style="border: 0px;"></iframe>
-      </div>
+
+      <div class="large-6 columns" id="tags">
+                 <h4>Release History</h4>
+        <div class="panel">
+          <table>
+            <tr>
+              <th>Release</th>
+              <th>Date</th>
+              <th>Released by</th>
+            </tr>
+            {% for rc in last_n_tags.0 %}
+            <tr>
+              <td>{{rc.0}}</td>
+              <td>{{rc.1}}</td>
+              <td>{{rc.2}}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div><!-- #tags -->
+
     </div><!--row-->
 
 
@@ -76,10 +82,25 @@
         <li>Last 10 commits: <code>10/15</code></li>
       </ul>
 
-      <div class="large-6 columns">
-        <h4>histogram (detailed committers)</h4>
-        </div>
-        <h4>histogram (poor committers)</h4>
-        </div>
+      <div class="large-6 columns" id="stats">
+        <h4>Stats</h4>
+        <table>
+        <tbody>
+        <tr>
+        <td>Committers (bus factor)</td>
+        <td>{{total_committers}}</td>
+        </tr>
+        <tr>
+        <td>Total Commits</td>
+        <td>{{total_commits}}</td>
+        </tr>
+
+        </tbody>
+        </table>
+        <!-- p>Branches: <code>master</code> / <code>dev</code> </p -->
+        <!-- p>latest commit: <code>av48992kfvalf</code>
+        by <a href="/user/">A U Thor</a></p -->
+      </div><!-- #stats -->
+
     </div --><!-- row -->
 {% endblock %}
