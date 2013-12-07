@@ -85,8 +85,8 @@ barsContainer.append("line")
 
 }
     </script>
-<script id="csv" type="text/csv">Developer,Commits
-{%for row in commitvol %}"{{row.0|truncatewords:1}}",{{row.1}}
+<script id="csv" type="text/csv">{{data_header}}
+{%for row in data %}"{{row.0|truncatewords:1}}",{{row.1}}
 {% endfor %}</script>
     <script>renderChart();
 d3.select(self.frameElement).style("height", "140px");

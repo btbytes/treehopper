@@ -107,6 +107,17 @@ LIMIT 1
 """)
         return results[0][0]        
 
+    def langpopularity(self):
+        "return the number of files of all source file types"
+        results = self.cypher("""START myrepo=node({self})
+MATCH (a)-[:IS_A]->(b)
+WITH a,b
+WHERE HAS(a.path)
+RETURN DISTINCT b.name, count(b)
+ORDER BY count(b) DESC
+""")
+        return results[0]
+
 class Actor(StructuredNode):
     name = StringProperty(unique_index=True, required=True)
     email =  StringProperty()

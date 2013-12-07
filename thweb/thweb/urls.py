@@ -9,6 +9,10 @@ urlpatterns = patterns('',
                        url(r'^repo/(?P<repo_name>\w+)/calview$', 'thweb.views.calview', name='calview'),
                        url(r'^repo/(?P<repo_name>\w+)/caldata/(?P<year>\d{4})$', 'thweb.views.caldata', name='caldata'),
                        url(r'^repo/(?P<repo_name>\w+)/commitvol$', 'thweb.views.commitvol', name='commitvol'),
+                       url(r'^repo/(?P<repo_name>\w+)/langpop$', 'thweb.views.langpop', name='langpop'),
+                       url(r'^repo/(?P<repo_name>\w+)/langpopdata$', 'thweb.views.langpopdata', name='langpopdata'),
+
+
 
 
     (r'^static/(?P<path>.*)$', 'django.views.static.serve',
