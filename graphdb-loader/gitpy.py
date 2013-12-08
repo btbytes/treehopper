@@ -16,7 +16,7 @@ from py2neo import neo4j, node, rel
 # UTF8Writer = codecs.getwriter('utf8')
 # sys.stdout = UTF8Writer(sys.stdout)
 
-repo = Repo("/Users/pradeep/src/hakyll")
+repo = Repo("/Users/pradeep/src/postgres")
 
 
 def changed_files():
@@ -59,11 +59,21 @@ def changed_files():
         print 'Number of commits in the master: ', count
 
 
-def main():
+def dotags():
     tags = repo.tags
     for tag in tags:
         print 'tag: ', tag
         print '\tcommit: ', tag.commit
+
+
+def main():
+    heads = repo.heads
+    print heads
+    commits = repo.iter_commits('master')
+    count = 0
+    for commit in commits:
+        count += 1
+    print 'total commits: ', count
 
 if __name__ == '__main__':
     main()
