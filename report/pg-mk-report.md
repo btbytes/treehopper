@@ -8,18 +8,15 @@
 A typical software project has hundreds of files, developed over months
 and years by numerous developers. Version control systems are an
 integral part of a software development practice. Version control
-systems not just important for maintaining the history of a project,
+systems are not just important for maintaining the history of a project,
 they are also the foundation for a team to collaborate.
 
-Version contolled  code bases contain more than just the history of
-individual files, they are also a important artefacts in the archeology
-of software development.
 
 There are many ways to visualise source code. Module dependency graphs
 are one of them. Dependency graphs for Object oriented programming
 languages have classes as the nodes and edges show the dependency
 between the class and where it is being used. However, there is lot of
-understanding captured outside the source code.
+understanding captured outside the individual source files.
 
 We wanted to explore the codebases interactively and answer some
 interesting questions like:
@@ -33,7 +30,7 @@ interesting questions like:
   HTML files etc.,
 
 
-We decided on developing a software that let us find answers to these
+We developed a software that helps us find answers to these
 kind of questions on a "on-demand" basis and present it as a visual
 dashboard.
 
@@ -53,17 +50,18 @@ practices.
 
 ![A GUI view of a git repository](images/th-sourcetree.png)
 
-The above image shows a snapshot of the postgresql database's source
+Figure 1 shows a snapshot of the postgresql database's source
 code.
 
 The various coloured lines represent the various branches
 
 The description corresponds to a commit, which inturn is a SHA1 hash
 guaranteed to be unique. Each commit has a committer. Sometimes the
-author of a change to the files is different than the person who commits
+author of a change is different than the person who commits
 it to the repository.
 
-The bottom two windows show the
+The bottom two windows show the detailed commit log and the `diff`
+between the current commit and it's parent commit.
 
 
 ## Git version control system
@@ -134,7 +132,7 @@ our application. Python is a mature programming language with libraries
 and bindings available for all the different parts of the application we
 wanted to develop.
 
-We used  [Git Python](http://pythonhosted.org/GitPython/0.3.2/) for
+We used  Git Python -- http://pythonhosted.org/GitPython/0.3.2/ for
 reading the object datastore of a git repository. The release version
 was missing an important patch required for handling cryptographically
 signed commits. To fix the signed `gpg` commit errors, we used
@@ -375,23 +373,23 @@ commit) has one or more parents  \\
 
 ## Analytical dashboard
 
-Front page of the applications where we can see all the repositories
-known to the application
+We can see all the repositories
+known to the application on the front page of the application.
 
 ![Front page](images/th-frontpage.png)
 
 This view is obtained by querying the database for all the *Repository*
 type nodes.
 
-The *neomodel* provides an easy to use API for querying all the nodes of
-a type. We used:
+The *NeoModel* library provides an easy to use API for querying all the nodes of
+a type. We used this following call to to fetch all the *Repository*
+objects and dispatched it to the view template and displayed it as HTML.
+
 
 ~~~{.python}
 Repository.category().instance.all()
 ~~~~
 
-to fetch all the *Repository* objects and dispatched it to the view
-template and displayed it as HTML using the following code:
 
 ~~~~{.html}
     <h2>Repositories</h2>
@@ -406,19 +404,19 @@ template and displayed it as HTML using the following code:
 
 ## Repository view
 
-Each repository known to the Application shows a dashboard like this:
+Each repository known to the application shows a dashboard like this:
 
 ![Repository view](images/th-postgres.png)
 
 ### Summary statistics
-At the top of the page, we show the name of the repository.
+At the top of the page, we see the name of the repository.
 
 Below the repository name is a summary statistics of the repository.
 
 ![Summary statistics](images/th-repo-summary.png)
 
 
-The cypher queries to used extract this information are:
+The cypher queries used to extract this information are:
 
 Total number of commits in the repository
 
