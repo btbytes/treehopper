@@ -554,10 +554,19 @@ dashboards, which can then show developer involvement in various
 projects.
 
 
-# Reference
+# References
 
-- [Git for Computer Scientists](http://eagain.net/articles/git-for-computer-scientists/)
-- [Cypher Query Language]((http://docs.neo4j.org/chunked/stable/cypher-query-lang.html))
--
-  [Thoughts on distributed version control and git](http://zakalwe.fi/~shd/articles/git/thoughts_on_distributed_version_control_and_git.html) -
--image courtesy (`git-star-workflow.png`)
+  * Git for Computer Scientists -- http://eagain.net/articles/git-for-computer-scientists/
+
+  * Cypher Query Language --
+    http://docs.neo4j.org/chunked/stable/cypher-query-lang.html
+
+## Links to software libraries used
+
+  * Django Project -- https://www.djangoproject.com/
+  * Neo4J -- http://www.neo4j.org/
+  * Git Python -- http://pythonhosted.org/GitPython/0.3.2/index.html
+  * Neo2py - http://book.py2neo.org/
+  * Neomodel -- https://github.com/robinedwards/neomodel
+  * Zurb Foundation -- http://foundation.zurb.com/
+  * D3.js -- http://d3js.org/
