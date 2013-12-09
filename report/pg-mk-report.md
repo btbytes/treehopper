@@ -93,30 +93,89 @@ etc.,
 
 ## Design considerations
 
+The realization that git's internal  representation is a graph, made us
+consider a graph database to store the repository information. Graph
+databases provide an easy way to reason, store and query data.
+
 
 ## Technology choice
 
-### Database
+#### Neo4j graph database
 
-#### Neo4j
+We chose Neo4j as it is the most popular of the modern, open source
+Graph databases. It also had good documentation in the form of this
+book - [http://graphdatabases.com/](http://graphdatabases.com/) written
+by the core authors of the Neo4j database.
 
-#### Cypher Query Langauge
+
+Neo4j uses "Cypher" graph querying language that allows for expressive
+and efficient querying of graph datastore without having to write
+traversals through the graph structures in code. Most of the keywords
+like `WHERE` and `ORDER BY` in Cypher are inspired by `SQL`.
+
+
+The query language is comprised of several distinct clauses.
+
+  * `START`: Starting points in the graph, obtained via index lookups or by element IDs.
+  * `MATCH`: The graph pattern to match, bound to the starting points in START.
+  * `WHERE`: Filtering criteria.
+  * `RETURN`: What to return.
+  * `CREATE`: Creates nodes and relationships.
+  * `DELETE`: Removes nodes, relationships and properties.
+  * `SET`: Set values to properties.
+  * `FOREACH`: Performs updating actions once per element in a list.
+  * `WITH`: Divides a query into multiple, distinct parts.
+
 
 ### Backend
 
-#### Python
+We used the Python programming language for developing the backend of
+our application. Python is a mature programming language with libraries
+and bindings available for all the different parts of the application we
+wanted to develop.
 
-Git-Python
+We used  [Git Python](http://pythonhosted.org/GitPython/0.3.2/) for
+reading the object datastore of a git repository. The release version
+was missing an important patch required for handling cryptographically
+signed commits. To fix the signed `gpg` commit errors, we used
+[this codebase - (https://github.com/sugi/GitPython/tree/gpg-sig-support)](https://github.com/sugi/GitPython/tree/gpg-sig-support)
+which has the patches required, but isn't merged with the main
+gitpython repository yet.
 
-#### Django
 
-### Front end
+The web application was developed using the
+[Django](https://www.djangoproject.com/) web framework. Django is a MVC
+framework that seperates application logic, presentation, and URL
+routing. Django also has a prolific amount of functionality out of the
+box and extensive collection of libraries that add functionality.
 
-Zurb Foundation
+We chose Django because of our previous experience in using Django for
+commercial application development.
+
+### Web interface
+
+An important part of modern web application development is the need to
+have easy to use, accessible (from various devices - desktop, laptop,
+mobile and tablets) and attractive interfaces. Accomodating all these
+variables is a daunting task. Many HTML+CSS frameworks have been written
+to address these issues. Some of the more popular ones are: `Bootstrap`
+from Twitter, `Foundation` by Zurb, `YUI` by Yahoo.
+
+We chose Zurb, even though we had previous experience with bootstrap
+because the project presented an opportunity to try a new framework.
+
+Zurb provided layout elements (grids, rows), visual styling elements
+(automatic content rearrangement based on device display parameters).
 
 
+### Visualization
 
-## Usage
+A picture can convey a large amount of information succinctly. We made
+use of the excellent [D3.js](http://d3js.org) library to create the
+charts used in the application. D3.js has been used to create
+visualization for various high profile projects including nytimes.com.
+
+## Using the
 
 ### Installing Neo4j database
 
@@ -184,3 +243,4 @@ Each repository known to the Application shows a dashboard like this:
 # Reference
 
 - [Git for Computer Scientists](http://eagain.net/articles/git-for-computer-scientists/)
+- [Cypher Query Language]((http://docs.neo4j.org/chunked/stable/cypher-query-lang.html))
