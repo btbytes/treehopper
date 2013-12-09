@@ -19,10 +19,76 @@ There are many ways to visualise source code. Module dependency graphs
 are one of them. Dependency graphs for Object oriented programming
 languages have classes as the nodes and edges show the dependency
 between the class and where it is being used. However, there is lot of
-understanding captured outside the source code. Development teams have
+understanding captured outside the source code.
+
+We wanted to explore the codebases interactively and answer some
+interesting questions like:
+
+* Who has worked on this project for the longest time?
+* What is the activity level on this project? Has there been an uptick
+  in code commits recently?
+* What is the "bus factor" on this project? That is, if one or more developers
+  leave the team, what will be the impact?
+* What is the nature of source code? Eg: what percentage is C files,
+  HTML files etc.,
+
+
+We decided on developing a software that let us find answers to these
+kind of questions on a "on-demand" basis and present it as a visual
+dashboard.
 
 
 # Approach
+
+We selected `git` distributed version control system as the basis for
+analyzing codebases. Git was developed by Linus Torvals (the developer of
+Linux Operating System) as an answer to the problem of having to
+coordinate the work of developers worldwide that goes into to continued
+development of Linux Kernel. Git has become the most popular of the open source
+distributed version control systems among it's peers, such as
+`mercurial`, `bazaar`, `darcs`, `fossil` etc., A large number of open
+source projects now use git for distributed version control. Enterprises
+often have their own setups of git that compliments their development
+practices.
+
+![A GUI view of a git repository](images/th-sourcetree.png)
+
+The above image shows a snapshot of the postgresql database's source
+code.
+
+The various coloured lines represent the various branches
+
+The description corresponds to a commit, which inturn is a SHA1 hash
+guaranteed to be unique. Each commit has a committer. Sometimes the
+author of a change to the files is different than the person who commits
+it to the repository.
+
+The bottom two windows show the
+
+
+## Git version control system
+
+Every git directory maintains the complete history of changes made to
+the files. Git stores these changes in an internal representation called
+the git object storage. This storage is a directed acyclic graph.
+
+Files in a code repository are represented by `blob` (though blobs can
+point to other things like symbolic links).
+
+Directories are represented by `trees`. The trees refer to `blobs`.
+
+A commit refers to a `tree` that represents the state of the files at
+the time of commit.
+
+`refs`: References/heads/branches are bookmarks that point to a node in
+the DAG. They serve as reminders to the developers as to  where they are
+working at the moment. The `HEAD` ref is a special ref that points to
+the currently active branch.
+
+The following graph shows the relation between `blob`, `tree`, `refs`
+etc.,
+
+![Git as a graph](images/git-storage-6.png)
 
 
 ## Design considerations
@@ -113,3 +179,8 @@ Each repository known to the Application shows a dashboard like this:
 
   * Support other distributed version control systems like `mercurial`.
   * Handle more than one branch
+
+
+# Reference
+
+- [Git for Computer Scientists](http://eagain.net/articles/git-for-computer-scientists/)
