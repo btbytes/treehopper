@@ -100,7 +100,7 @@ databases provide an easy way to reason, store and query data.
 
 ## Technology choice
 
-#### Neo4j graph database
+### Neo4j graph database
 
 We chose Neo4j as it is the most popular of the modern, open source
 Graph databases. It also had good documentation in the form of this
@@ -127,7 +127,7 @@ The query language is comprised of several distinct clauses.
   * `WITH`: Divides a query into multiple, distinct parts.
 
 
-### Backend
+### Application backend
 
 We used the Python programming language for developing the backend of
 our application. Python is a mature programming language with libraries
@@ -152,7 +152,7 @@ box and extensive collection of libraries that add functionality.
 We chose Django because of our previous experience in using Django for
 commercial application development.
 
-### Web interface
+### Web interface -- frontend
 
 An important part of modern web application development is the need to
 have easy to use, accessible (from various devices - desktop, laptop,
@@ -177,6 +177,8 @@ visualization for various high profile projects including nytimes.com.
 
 ## Installation and Usage
 
+The application is named `thweb` and all the related files are in the
+`thweb` directory.
 
 ### Installing Neo4j database
 
@@ -199,6 +201,15 @@ python `virtualenv` to isolate these library installations.
   * Django
   * Neomodel
   * Gitpython
+
+The user can use the `requirements.txt` to install all the dependencies
+to the virtual environment using this command:
+
+~~~~{.bash}
+    $ workon thdev
+    $ #where thdev is the name of the virtualenvironment
+    $ pip install -r requirements.txt
+~~~~
 
 ### Using the treehopper application
 
@@ -224,6 +235,24 @@ where, `/Users/pradeep/src/requests` contains a git repository. The
 `--name` parameter is optional.
 
 
+### Running the web application
+
+~~~~{.bash}
+cd $THWEB
+python manage.py runserver
+Validating models...
+
+0 errors found
+December 09, 2013 - 13:50:24
+Django version 1.6, using settings 'thweb.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+~~~~
+
+This will start the Django server on port `8000` of `localhost`.
+
+![Application start page](images/th-localhost.png)
+
 ### Visualising graph nodes
 
 Once the user has the repository data loaded into the graph database, you
@@ -244,22 +273,119 @@ the query:
     MATCH n RETURN n LIMIT 50
 
 
-### Analytical dashboard
+# Design
+
+We modeled the graph database close the object representation of the
+git repository.
+
+![Treehopper design](images/th-nodes.png)
+
+The above shows a property graph model of our application.
+
+A *property graph* is made of *nodes*, *relationships*, and
+*properties*.
+
+* Nodes contain *properties*. Nodes can be thought of as documents that
+  store properties in the form of key-value pairs. The keys are strings
+  and values are arbitarary data types.
+
+* Relationships connect the nodes. A relationship has a direction, a
+  label, a *start node* and an *end node*.
+
+* Relationships can also have properties. These properties are useful in
+providing additional metadata for graph algorithms, adding semantics to
+relationships and constraing queries at runtime.
+
+## Nodes
+
+### Repository
+
+Property  Description
+--------  -----------
+name      name given to the repository by the application administrator
+url       path to the local checkout of the repository
+
+This is a top level node. All commits belong to a one and only repository.
+
+### Commit
+
+Property  Description
+--------  -----------
+hexsha    40 byte hex version of the 20 byte bin sha that uniquely identifies a commit
+message   Commit message. It may be an empty string if no message is provided.
+summary   The first line of the commit message.
+ctime     commit time in unix timestamp format
+date      commit date in `yyyy-mm-dd` format
+tag       if the commit was tagged, this will hold the tag string
+
+
+This node is central to the application. This contains the unique
+identifier (`hexsha`) unique to each commit.
+
+### Committer
+
+Property   Description
+--------   -----------
+Name       Name of the committer
+Email      Email of the committer
+
+
+This is the information about the developer who has committed one or
+more commits to the repository.
+
+### File
+
+Property   Description
+--------   -----------
+path       relative path to the file from the base of the repository
+
+This node stores information about individual files in the repository.
+
+### SourceType
+
+Property   Description
+--------   -----------
+name       file type identifier
+
+This Node identifies a the source file type of a file. That is a a file
+ending with `.cpp` is `C++` file, `.py` is a Python file. etc.,
+
+
+## relationships
+
+
+\begin{table}[h]
+\begin{tabular}{lllll}
+ & Relationship  & From & To & Description \\ \hline
+ & BELONGS\_TO & Commit & Repository & Every commit belongs to exactly
+ one repository \\
+ & CHILD\_OF & Commit & Commit & Every commit (except the very first
+commit) has one or more parents  \\
+ & COMMITTED\_BY  & Commit & Committer & A commit is committed to
+ repository by a named committer \\
+ & MODIFIED\_BY & File & Commit & Every file in the repository is
+ modified by one or more commits \\
+ & IS\_A & File & SourceType & every file is of certain file type \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+# Results
+
+## Analytical dashboard
 
 Front page of the applications where we can see all the repositories
 known to the application
 
 ![Front page](images/th-frontpage.png)
 
-### Repository view
+## Repository view
 
 Each repository known to the Application shows a dashboard like this:
 
 ![Repository view](images/th-postgres.png)
 
-
-
-# Results
 
 We have demonstrated that it is possible to extract significant amount
 of analysis about the codebase using our application.
