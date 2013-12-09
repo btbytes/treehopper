@@ -175,7 +175,8 @@ use of the excellent [D3.js](http://d3js.org) library to create the
 charts used in the application. D3.js has been used to create
 visualization for various high profile projects including nytimes.com.
 
-## Using the
+## Installation and Usage
+
 
 ### Installing Neo4j database
 
@@ -187,10 +188,19 @@ and start the server using the command line interface
     $ cd NEO4JPATH
     $ bin/neo4j start
 
-You can open [http://localhost:7474/](http://localhost:7474) in the
+The user can open [http://localhost:7474/](http://localhost:7474) in the
 browser to see the web interface of the database server.
 
 ### Installing the treehopper application
+
+The user will need the following python libraries. We recommend using a
+python `virtualenv` to isolate these library installations.
+
+  * Django
+  * Neomodel
+  * Gitpython
+
+### Using the treehopper application
 
 There are two parts to the application.
 
@@ -206,13 +216,32 @@ database.
 The CLI invokation is:
 
 ~~~~{.bash}
+cd $THWEB
 python manage.py load_git --url /Users/pradeep/src/requests --name requests
 ~~~~
+
+where, `/Users/pradeep/src/requests` contains a git repository. The
+`--name` parameter is optional.
 
 
 ### Visualising graph nodes
 
+Once the user has the repository data loaded into the graph database, you
+can use the built-in data browser and query interface.
+
+The data browser allows the user to visualise the datbase using canned
+queries.
+
+The user can also write queries in `CYPHER` language.
+
+
 ![Query Interface](images/th-neo4j-nodes.png)
+
+
+In the above figure, 50 random nodes are returned by the datastore using
+the query:
+
+    MATCH n RETURN n LIMIT 50
 
 
 ### Analytical dashboard
@@ -232,12 +261,38 @@ Each repository known to the Application shows a dashboard like this:
 
 # Results
 
+We have demonstrated that it is possible to extract significant amount
+of analysis about the codebase using our application.
+
 # Conclusion
+
+Graph databases are an excellent datastore option for non-traditional
+applications like ours. Graph databases facilitate easy modeling of the
+domain under consideration without having to "force" the data into a
+traditional Entity-Relationship model.
+
+The biggest advantage we found with graph databases is that, it is quite
+easy to write the queries for the graph data as long as we can draw a
+connection between the two (or more) nodes that we want to relate. This
+is much more easier to reason than a join between tables in an RDBMS.
+
 
 # Future work
 
-  * Support other distributed version control systems like `mercurial`.
-  * Handle more than one branch
+Support other distributed version control systems like `mercurial`.
+
+Handle more than one branch. Branching is used with much more
+commonly in git than in version control systems like subversion, where
+branching is a much more expensive operation. By adding all the
+branches to the repository, we can visualize the process of how features
+and bugs are handled using the branching mechanism.
+
+Write queries and create visualizations to see the relation between
+various repositories. Often, developers work on more than one code
+repository at time. By having all the repositories that belong to an
+organization in the `treehopper` system, we can create "user"
+dashboards, which can then show developer involvement in various
+projects.
 
 
 # Reference
