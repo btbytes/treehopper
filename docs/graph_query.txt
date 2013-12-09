@@ -76,7 +76,7 @@ return pat, count(c);
 START myrepo=node:Repository(name="hakyll")
 MATCH (c)
 WITH c as c, '2012-02-.*' as pat
-WHERE c.date =~ pat 
+WHERE c.date =~ pat
 return pat, count(c);
 
 * return the date and number of commits for all days of an year
@@ -85,7 +85,7 @@ return pat, count(c);
 START myrepo=node:Repository(name="hakyll")
 MATCH (c)
 WITH c as c, '2012-.*' as pat
-WHERE c.date =~ pat 
+WHERE c.date =~ pat
 return c.date as date, count(c)
 
 * Return the very last day of commit for the repo
@@ -187,7 +187,7 @@ RETURN committer, count(sourcetype)
 
 START myrepo=node:Repository(name="hakyll")
 MATCH (committer)<-[COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
-WITH committer, commit 
+WITH committer, commit
 RETURN committer.name, commit.date
 ORDER BY commit.ctime
 LIMIT 1

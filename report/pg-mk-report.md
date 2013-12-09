@@ -1,5 +1,5 @@
 % Treehopper -- exploring version controlled software code bases using
- graph databases
+ Neo4j graph database
 % Pradeep Gowda and Mehmet Kilicarslan
 % December 9, 2013
 
@@ -351,7 +351,7 @@ This Node identifies a the source file type of a file. That is a a file
 ending with `.cpp` is `C++` file, `.py` is a Python file. etc.,
 
 
-## relationships
+## Relationships
 
 
 \begin{table}[h]
@@ -380,11 +380,144 @@ known to the application
 
 ![Front page](images/th-frontpage.png)
 
+This view is obtained by querying the database for all the *Repository*
+type nodes.
+
+The *neomodel* provides an easy to use API for querying all the nodes of
+a type. We used:
+
+~~~{.python}
+Repository.category().instance.all()
+~~~~
+
+to fetch all the *Repository* objects and dispatched it to the view
+template and displayed it as HTML using the following code:
+
+~~~~{.html}
+    <h2>Repositories</h2>
+    <ul>
+    {% for repo in repositories %}
+    <li><a href="/repo/{{repo.name}}">{{repo.name}}</a>
+    at <code>{{repo.url}}</code></li>
+    {% endfor %}
+    </ul>
+~~~~
+
+
 ## Repository view
 
 Each repository known to the Application shows a dashboard like this:
 
 ![Repository view](images/th-postgres.png)
+
+### Summary statistics
+At the top of the page, we show the name of the repository.
+
+Below the repository name is a summary statistics of the repository.
+
+![Summary statistics](images/th-repo-summary.png)
+
+
+The cypher queries to used extract this information are:
+
+Total number of commits in the repository
+
+~~~~{.sql}
+START myrepo=node:Repository(name="postgres")
+MATCH (commit)-[:BELONGS_TO]->myrepo
+WITH commit
+WHERE HAS(commit.hexsha)
+RETURN count(commit) as total_commits
+~~~~
+
+Total number of committers in the repository
+
+~~~~{.sql}
+START myrepo=node:Repository(name="postgres")
+MATCH (committer)<-[:COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+WITH commit, committer
+WHERE HAS(commit.hexsha)
+RETURN count(DISTINCT committer.name)
+~~~~
+
+
+### Programming language distribution
+
+An important metric of a code base is the distribution of various
+programming langauges. In a modern, large codebase, there are various
+types of programming langauges in use. We give a graphical view of the
+distribution as shown below
+
+![Language distribution](images/th-lang-dist.png)
+
+
+The Cypher query used to extract this information is:
+
+~~~~{.python}
+def langpopularity(self):
+    "return the number of files of all source file types"
+    results = self.cypher("""START myrepo=node({self})
+MATCH (a)-[:IS_A]->(b)
+WITH a,b
+WHERE HAS(a.path)
+RETURN DISTINCT b.name, count(b)
+ORDER BY count(b) DESC
+""")
+        return results[0]
+~~~~
+
+### Developer contribution
+
+Software development is inherently a people driven activity. We show the
+*Top 5 Committers* statistic as a reminder of who has contributed the
+most code to the repository. While, just the number of lines committed
+by a developer is not a proxy for their competence and contribution, it
+is an important metric to know.
+
+![Developer contribution](images/th-top5-devs.png)
+
+The Cypher query used to extract this information is:
+
+~~~~{.python}
+def most_commits_by_n_users(self, n=5):
+    "return the total commits by n most active users"
+    results = self.cypher("""START myrepo=node({self})
+MATCH (committer)<-[COMMITTED_BY]-(commit)-[:BELONGS_TO]->myrepo
+with commit, committer
+WHERE HAS(committer.name)
+RETURN DISTINCT committer.name, COUNT(commit)
+ORDER BY COUNT(commit) DESC
+LIMIT %d
+""" % (n, ))
+        return results[0]
+~~~~
+
+The parameter `n` controls the number of top developers we would like to see.
+
+
+### Recent activity -- calendar view
+
+The best indicator of an active project is the frequency and recency
+with which the source code is being committed to the repository by the
+developers. We used the *heat map* method to visualise this
+information.
+
+![Heat map](images/th-calview.png)
+
+The Cypher query to extract the information is:
+
+~~~~{.python}
+def commit_counts_by_day_for_year(self, year):
+    "Return commit_counts_by_day_for_year"
+    pattern = '%s-.*' % (year, )
+    results = self.cypher("""
+START myrepo=node({self})
+MATCH (c)-[:BELONGS_TO]->(myrepo)
+WITH c as c, '%s' as pat
+WHERE c.date =~ pat
+return c.date as date, count(c) as count""" % (pattern, ))
+        return results
+~~~~
 
 
 We have demonstrated that it is possible to extract significant amount
@@ -393,7 +526,7 @@ of analysis about the codebase using our application.
 # Conclusion
 
 Graph databases are an excellent datastore option for non-traditional
-applications like ours. Graph databases facilitate easy modeling of the
+applications like `treehopper`. Graph databases facilitate easy modeling of the
 domain under consideration without having to "force" the data into a
 traditional Entity-Relationship model.
 
@@ -425,3 +558,6 @@ projects.
 
 - [Git for Computer Scientists](http://eagain.net/articles/git-for-computer-scientists/)
 - [Cypher Query Language]((http://docs.neo4j.org/chunked/stable/cypher-query-lang.html))
+-
+  [Thoughts on distributed version control and git](http://zakalwe.fi/~shd/articles/git/thoughts_on_distributed_version_control_and_git.html) -
+-image courtesy (`git-star-workflow.png`)
